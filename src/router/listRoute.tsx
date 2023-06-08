@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "../auth/LoginPage";
+import LoginPage from "../pages/Auth/LoginPage";
 import { Channel } from "../pages/Channel/Channel";
 import App from "../App";
 

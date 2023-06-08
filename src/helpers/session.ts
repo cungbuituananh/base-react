@@ -4,8 +4,6 @@ export const LOCAL_STORAGE = "local";
 export function setDataSession(type: string, key: string, data: any) {
   if (typeof Storage !== "undefined") {
     if (!key) return false;
-    // process data
-    // save to storegae
     data = JSON.stringify(data);
     if (type === SESSION_STORAGE) {
       sessionStorage.setItem(key, data);
@@ -18,7 +16,6 @@ export function setDataSession(type: string, key: string, data: any) {
     }
   }
   return null;
-  // console.log('This Browser dont supported storeage');
 }
 
 export function getDataSession(type: string, key: string) {
@@ -41,6 +38,11 @@ export function getDataSession(type: string, key: string) {
     }
     return data;
   }
-  // console.log('This browser does not support local storage');
   return null;
 }
+
+export const getAuthToken = () => {
+  const token = localStorage.getItem("authToken");
+
+  return `Bearer ${token}`;
+};
