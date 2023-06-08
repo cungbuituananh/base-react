@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "./logo.svg";
 import { LOCAL_STORAGE, getDataSession } from "./helpers/session";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Button, Drawer, Dropdown, Layout, Menu, MenuProps, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import {
@@ -15,10 +15,14 @@ import { Content, Header } from "antd/es/layout/layout";
 import { MosanLogo } from "./assets/svg";
 import { useLogin } from "./hooks/useLogin";
 
+
 function App() {
+  const _ = require('lodash');
   const [collapsed, setCollapsed] = useState(false);
   const isLogin = getDataSession(LOCAL_STORAGE, "isLogin");
+  
   const { logoutAccount } = useLogin();
+  const navigate = useNavigate();
   // const { isAvailableRoute } = useCurrenPath();
   const {
     token: { colorBgContainer },
@@ -66,21 +70,65 @@ function App() {
 
   const navMenu = [
     {
-      key: "1",
+      key: "channel",
       icon: <UserOutlined />,
-      label: "Channel",
-    },
-    {
-      key: "2",
-      icon: <VideoCameraOutlined />,
-      label: "nav 2",
-    },
-    {
-      key: "3",
+      label: "Channel Management",
+      roles: ['admin','ho'],
+      children: [
+        {
+          key:"report",
+          label:"Report",
+          roles: ['admin'],
+        },
+        {
+          key: "funding",
+          label: "Funding",
+          roles: ['ho'],
+        },
+      ]
+    },   {
+      key: "Upload",
       icon: <UploadOutlined />,
-      label: "nav 3",
-    },
+      label: "Report",
+      roles: ['admin'],
+      children: [
+        {
+          key:"report2",
+          label:"Report"
+        },
+        {
+          key: "funding2",
+          label: "Funding",
+        },
+      ]
+    }
   ];
+const getMenuItemsByRoles = (output:any, navMenu:any) => {
+  const isRole = getDataSession(LOCAL_STORAGE, "isRole");
+  // const { code: key } = Object(roleCurrent) || {};
+  // if (!navMenu || navMenu.length <= 0) return _.omit({ ...output }, ["children"]);
+  const menuFilter =
+  navMenu
+  ?.filter((item:any) => _.isEmpty(item.roles) || item.roles.includes(isRole))
+  .map((itemMenu:any) => {
+    return getMenuItemsByRoles(
+      { ...itemMenu },
+      itemMenu.children
+      );
+    }) ; 
+    return { ...output, children: menuFilter };
+  };
+  //  const navigateConfigChannel = {
+//   bizzApp: "CHANNEL",
+//   children: getMenuItemsByRoles({ key: "", label: "" }, navMenu, isRole)
+//     .children,
+// };
+const menuFilterByRole = getMenuItemsByRoles({ key: "", label: "" }, navMenu).children
+const handleMenuClick = ({ key}:any) => {
+  if (key) {
+    navigate(key);
+  }
+};
 
   return (
     <Layout>
@@ -102,8 +150,9 @@ function App() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={navMenu}
+          items={menuFilterByRole}
+          // defaultOpenKeys={["channel"]}
+          onClick={handleMenuClick}
         />
       </Sider>
       <Layout>

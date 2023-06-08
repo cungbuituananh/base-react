@@ -11,6 +11,7 @@ export const AUTH_BASE_URL = process.env.REACT_APP_GATE_WAY_ENDPOINT;
 
 export const useLogin = () => {
   // const dispatch = useDispatch();
+  const isRole = 'admin'
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   // const getAccountInfo = async () => {
@@ -30,8 +31,9 @@ export const useLogin = () => {
       // const { data } = loginDetail;
       // setCmsToken(data?.data);
       setDataSession(LOCAL_STORAGE, "isLogin", true);
+      setDataSession(LOCAL_STORAGE, "isRole", isRole);
       // await getAccountInfo();
-      navigate("/");
+      navigate("/channel");
       setLoading(false);
     } catch (err) {
       // errorMsg(err, "Có lỗi");

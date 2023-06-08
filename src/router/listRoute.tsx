@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "../auth/LoginPage";
 import { Channel } from "../pages/Channel/Channel";
 import App from "../App";
+import FundingPage from "../pages/Funding/Funding";
+import Report from "../pages/Report/Report";
 
 export interface RoutesProps {
   path: string;
@@ -23,6 +25,8 @@ const router = createBrowserRouter([
         path: "/channel",
         element: <Channel />,
       },
+      { path: "/funding", element: <FundingPage /> },
+      { path: "/report", element: <Report /> }
     ],
   },
   {
